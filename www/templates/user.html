@@ -1,0 +1,51 @@
+<ion-view view-title="User">
+  <ion-content>
+    <div class="list card">
+
+      <div class="item item-avatar">
+        <img ng-if="user.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
+        <img ng-if="!user.male" ng-src="https://weight-control.herokuapp.com/images/girl.png">
+        <h2>{{user.username}}</h2>
+        <p>IMC {{user.imc | number : 2}}<span class="badge badge-assertive">{{user.imcdescription}}</span></p>
+      </div>
+
+      <div class="item item-body" align="center">
+        <div class="row">
+          <div class="col col-33"><strong><i class="icon ion-speedometer"> {{user.weight | number : 2}} Kg</i></strong></div>
+          <div class="col col-33"><i ng-if="user.male" class="icon ion-man"></i><i ng-if="!user.male" class="icon ion-woman"></i> {{user.height}} Cm</div>
+          <div class="col col-33"><i class="icon ion-flag"> {{user.goal | number : 2}} Kg</i></div>
+        </div>
+      </div>
+      <div class="item item-body" align="center">
+        <div class="row">
+          <div class="col col-33"><i class="icon ion-location"> {{user.reference.weight | number : 2}} Kg</i></div>
+          <div class="col col-33"><i class="icon ion-arrow-graph-up-right"> {{user.reference.diff | number : 2}} Kg</i></div>
+          <div class="col col-33"><i class="icon ion-calendar"> {{user.reference.days}} days</i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="number" step="any" placeholder="New Weight" ng-model="newWeight.weight">
+        </label>
+        <button class="button button-small" ng-click="addWeight()">
+          Add
+        </button>
+      </div>
+
+    <ul class="list">
+      <li class="item" ng-repeat="weight in weights | orderBy : '-date'">
+        <div class="row" on-hold="onHold(weight.id)">
+          <div class="col col-75">{{weight.date | date:'yyyy-MM-dd HH:mm'}}</div>
+          <div class="col">
+            <span ng-if="weight.reference" class="balanced"><strong>{{weight.weight | number : 2}}</strong></span>
+            <span ng-if="!weight.reference">{{weight.weight | number : 2}}</span>
+          </div>
+          <button class="button button-assertive button-small" ng-click="deleteWeight(weight.id)"><i class="icon ion-trash-a"></i></button>
+        </div>
+      </li>
+    </ul>
+  </ion-content>
+</ion-view>
