@@ -142,8 +142,8 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('UserCtrl', function($scope, $http, $stateParams, $localStorage, baseURL, AuthService) {
-  $scope.newWeight = {weight : 0, comments : ''};
+.controller('UserCtrl', function($scope, $http, $stateParams, $ionicModal, $localStorage, baseURL, AuthService) {
+  $scope.newWeight = {comments : ''};
   var loadProfile = function (){
     var req = { method: 'GET',
                 url: baseURL + '/users/' +  $stateParams.userId + '/profile',
@@ -188,6 +188,7 @@ angular.module('starter.controllers', [])
       function successCallback(response) {
       // this callback will be called asynchronously when the response is available
         $scope.weights = response.data;
+        $scope.newWeight = {comments : ''};
         loadProfile();
       }, function errorCallback(response) {
       // called asynchronously if an error occurs or server returns response with an error status.
@@ -211,28 +212,55 @@ angular.module('starter.controllers', [])
         console.log('err response:' + JSON.stringify(response));
       });
   }
-  $scope.onHold = function(id) {
-    //console.log('Holding:' + id)
-    for (var i = 0; i < $scope.weights.length; i++) {
-      if ($scope.weights[i].id == id){
-        break;
-      }
-    }
-    //console.log('$scope.weights:' + JSON.stringify($scope.weights));
-    //console.log('Index:' + i);
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/weight.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeWeight = function() {
+    $scope.modal.hide();
+  };
+
+  // Open the login modal
+  $scope.showWeightModal = function() {
+    //console.log('$scope.weight:' + JSON.stringify($scope.weight));
+    $scope.modal.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.updateWeight = function() {
     var req = { method: 'PUT',
-                url: baseURL + '/users/' +  $stateParams.userId + '/weights/' + id,
+                url: baseURL + '/users/' +  $stateParams.userId + '/weights/' + $scope.weight.id,
                 headers: { 'x-access-token': AuthService.getTokenId },
-                data: {date: $scope.weights[i].date , weight : $scope.weights[i].weight, reference : !$scope.weights[i].reference}
+                data: {date: $scope.weight.date , weight : $scope.weight.weight, reference : $scope.weight.reference, comments : $scope.weight.comments}
     }
     $http(req).then(
       function successCallback(response) {
       // this callback will be called asynchronously when the response is available
         loadProfile();
         loadWeights();
+        $scope.closeWeight();
       }, function errorCallback(response) {
       // called asynchronously if an error occurs or server returns response with an error status.
         console.log('err response:' + JSON.stringify(response));
       });
+  };
+
+
+  $scope.onHold = function(id) {
+    for (var i = 0; i < $scope.weights.length; i++) {
+      if ($scope.weights[i].id == id){
+        break;
+      }
+    }
+    $scope.weight = $scope.weights[i];
+    var tempDate = new Date($scope.weight.date);
+    $scope.weight.date = new Date(tempDate.getUTCFullYear(),tempDate.getUTCMonth(),tempDate.getUTCDate(),tempDate.getHours(),tempDate.getMinutes());
+    $scope.weight.weight = parseFloat($scope.weight.weight);
+    $scope.showWeightModal();
   }
 });

@@ -1,0 +1,41 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Weight Detail</h1>
+    <div class="buttons">
+      <button class="button button-positive" ng-click="closeWeight()"><i class="icon ion-close-round"></i></button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="updateWeight()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Weight</span>
+          <input type="number" step="any" ng-model="weight.weight">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Date</span>
+          <input type="date" ng-model="weight.date">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Time</span>
+          <input type="time" ng-model="weight.date">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Comments</span>
+          <input type="text" ng-model="weight.comments">
+        </label>
+        <label class="item item-input">
+        Reference&nbsp;&nbsp;<label class="toggle">
+          <input type="checkbox" ng-model="weight.reference">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Update</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

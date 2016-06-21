@@ -1,4 +1,5 @@
-<ion-view view-title="User">
+<ion-view>
+  <ion-nav-title>{{user.username}}'s profile</ion-nav-title>
   <ion-content>
     <div class="list card">
 
@@ -28,6 +29,7 @@
     <div class="list">
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
+          <i class="icon ion-speedometer placeholder-icon"></i>
           <input type="number" step="any" placeholder="New Weight" ng-model="newWeight.weight">
         </label>
         <button class="button button-small" ng-click="addWeight()">
