@@ -22,7 +22,7 @@ angular
           //console.log('Login Successful:' + JSON.stringify($rootScope.currentUser));
         }, function errorCallback(response) {
         // called asynchronously if an error occurs or server returns response with an error status.
-          var message = '<div><p>' +  response.status + '</p><p>' + response.statusText + '</p></div>';
+          var message = '<div><p>' +  response.status + '</p><p>' + response.data.reason + '</p></div>';
           var alertPopup = $ionicPopup.alert({
             title: '<h4>Login Failed!</h4>',
             template: message
@@ -47,7 +47,7 @@ angular
       return $rootScope.currentUser.username;
     }
 
-    function getUsernameId() {
+    function getUserId() {
       //console.log('$rootScope.currentUser:' + JSON.stringify($rootScope.currentUser));
       if($rootScope.currentUser){
         return $rootScope.currentUser.id;
@@ -71,22 +71,14 @@ angular
       $rootScope.currentUser = null;
       $localStorage.remove('userinfo');
       $rootScope.$broadcast('logout:Successful');
-/*      $http.post(baseURL + '/users/logout', loginData).then(
-        function successCallback(response) {
-        // this callback will be called asynchronously when the response is available
-          $rootScope.currentUser = null;
-          $rootScope.$broadcast('logout:Successful');
-        }
-        // called asynchronously if an error occurs or server returns response with an error status.
-      );*/
     }
 
     function register(registerData) {
-      console.log('baseURL:' + baseURL);
+      //console.log('baseURL:' + baseURL);
       $http.post(baseURL + '/users/register', registerData).then(
         function successCallback(response) {
         // this callback will be called asynchronously when the response is available
-          console.log('register response:' + JSON.stringify(response));
+          //console.log('register response:' + JSON.stringify(response));
           $rootScope.currentUser = {
               id: response.data.id,
               tokenId: response.tokenId,
@@ -95,8 +87,14 @@ angular
           $rootScope.$broadcast('register:Successful');
         }, function errorCallback(response) {
         // called asynchronously if an error occurs or server returns response with an error status.
-          console.log(response);
-          var message = '<div><p>' +  response.status + '</p><p>' + response.statusText + '</p></div>';
+          //console.log(response);
+          var message = '';
+          if (response.data.reason.startsWith('duplicate') || response.data.reason.startsWith('llave dup')){
+            message = '<div><p>' +  response.status + '</p><p> \'' + registerData.username + '\' already exists, please choose another username.</p></div>';
+          }
+          else{
+            message = '<div><p>' +  response.status + '</p><p>' + response.data.reason + '</p></div>';
+          }
           var alertPopup = $ionicPopup.alert({
             title: '<h4>Registration Failed!</h4>',
             template: message
@@ -114,7 +112,7 @@ angular
       register: register,
       isAuthenticated: isAuthenticated,
       getUsername: getUsername,
-      getUsernameId: getUsernameId,
+      getUserId: getUserId,
       getTokenId: getTokenId
     };
   }])

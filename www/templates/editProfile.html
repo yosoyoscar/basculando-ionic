@@ -1,0 +1,42 @@
+<ion-view view-title="Your data">
+	<ion-nav-title>{{user.username}}'s info</ion-nav-title>
+	<ion-content>
+		<form ng-submit="updateWeight()">
+	      <div class="list">
+	      	<label class="item item-input">
+	          <span class="input-label">Username</span>
+	          <input type="text" ng-model="user.username" readonly="true">
+	        </label>
+	        <label class="item item-input">
+	          <span class="input-label">Height (cm)</span>
+	          <input type="number" ng-model="user.height">
+	        </label>
+	        <label class="item item-input">
+	          <span class="input-label">Birthdate</span>
+	          <input type="date" ng-model="user.birthdate">
+	        </label>
+			<label class="item item-input">
+				<span class="input-label">Goal</span>
+				<input type="number" step="any" ng-model="user.goal">
+			</label>
+			<label class="item item-input">
+	          <span class="input-label">Token</span>
+	          <input type="text" ng-model="user.token" readonly="true">
+	        </label>
+	        <label class="item item-input">
+		        Female&nbsp;&nbsp;
+		        <label class="toggle toggle-calm">
+		        <input type="checkbox" ng-model="user.male">
+		        <div class="track">
+		        	<div class="handle"></div>
+		        </div>
+		        </label>
+		        &nbsp;&nbsp;Male
+		    </label>
+	        <label class="item">
+	          <button class="button button-block button-positive" ng-click="updateUser()">Update</button>
+	        </label>
+	      </div>
+	    </form>
+	</ion-content>
+</ion-view>

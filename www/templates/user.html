@@ -1,7 +1,24 @@
-<ion-view>
-  <ion-nav-title>{{user.username}}'s profile</ion-nav-title>
+<ion-view view-title="Profile">
+  <ion-nav-buttons side="secondary">
+    <div class="buttons" ng-if="loggedIn">
+      <button class="button button-icon icon ion-edit" ng-click="editProfile(user.id)"></button>
+    </div>
+  </ion-nav-buttons>
   <ion-content>
-    <div class="list card">
+    <div class="card" align="center" ng-if="!loggedIn">
+      <div class="item item-text-wrap">
+       You are not logged in.
+       <br/><br/>
+       Please
+       <br/><br/>
+       <button class="button button-full button-positive" ng-click="login()">Login</button>
+       <br/>
+       or
+       <br/><br/>
+       <button class="button button-full button-calm" ng-click="register()">Register</button>
+      </div>
+    </div>
+    <div class="list card" ng-if="loggedIn">
 
       <div class="item item-avatar">
         <img ng-if="user.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
@@ -13,8 +30,9 @@
       <div class="item item-body" align="center">
         <div class="row">
           <div class="col col-33"><strong><i class="icon ion-speedometer"> {{user.weight | number : 2}} Kg</i></strong></div>
-          <div class="col col-33"><i ng-if="user.male" class="icon ion-man"></i><i ng-if="!user.male" class="icon ion-woman"></i> {{user.height}} Cm</div>
           <div class="col col-33"><i class="icon ion-flag"> {{user.goal | number : 2}} Kg</i></div>
+          <div class="col col-33" ng-if="user.weight <= user.goal"><i class="icon ion-arrow-down-c"> {{user.goal - user.weight | number : 2}} Kg</i></div>
+          <div class="col col-33" ng-if="user.weight > user.goal"><i class="icon ion-arrow-up-c"> {{user.weight - user.goal | number : 2}} Kg</i></div>
         </div>
       </div>
       <div class="item item-body" align="center">
@@ -26,26 +44,31 @@
       </div>
     </div>
 
-    <div class="list">
+    
+    <div class="list" ng-if="loggedIn">
+    
+      <form ng-submit="addWeight()">
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-speedometer placeholder-icon"></i>
-          <input type="number" step="any" placeholder="New Weight" ng-model="newWeight.weight">
+          <input type="number" step="any" placeholder="New Weight" ng-model="newWeight.weight" required>
         </label>
-        <button class="button button-small" ng-click="addWeight()">
-          Add
-        </button>
+        <button class="button button-small" type="submit">Add</button>
       </div>
+      </form>
 
-    <ul class="list">
+    <ul class="list" ng-if="loggedIn">
       <li class="item" ng-repeat="weight in weights | orderBy : '-date'">
-        <div class="row" on-hold="onHold(weight.id)">
-          <div class="col col-75">{{weight.date | date:'yyyy-MM-dd HH:mm'}}</div>
-          <div class="col">
-            <span ng-if="weight.reference" class="balanced"><strong>{{weight.weight | number : 2}}</strong></span>
-            <span ng-if="!weight.reference">{{weight.weight | number : 2}}</span>
+        <div on-tap="onTap(weight.id)">
+          <div class="row">
+            <div class="col col-75">{{weight.date | date:'yyyy-MM-dd HH:mm'}}</div>
+            <div class="col" align="right">
+              <span ng-if="weight.reference" class="balanced"><strong>{{weight.weight | number : 2}}</strong> <small>Kg</small></span>
+              <span ng-if="!weight.reference">{{weight.weight | number : 2}} <small>Kg</small></span>
+            </div>
+<!--             <button class="button button-assertive button-small" ng-click="deleteWeight(weight.id)"><i class="icon ion-trash-a"></i></button> -->
           </div>
-          <button class="button button-assertive button-small" ng-click="deleteWeight(weight.id)"><i class="icon ion-trash-a"></i></button>
+          <div align="right"><small ng-if="weight.comments">{{weight.comments}}</small></div>
         </div>
       </li>
     </ul>

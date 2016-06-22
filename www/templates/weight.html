@@ -20,9 +20,9 @@
           <span class="input-label">Time</span>
           <input type="time" ng-model="weight.date">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-stacked-label">
           <span class="input-label">Comments</span>
-          <input type="text" ng-model="weight.comments">
+          <textarea ng-model="weight.comments"></textarea>
         </label>
         <label class="item item-input">
         Reference&nbsp;&nbsp;<label class="toggle">
@@ -37,5 +37,8 @@
         </label>
       </div>
     </form>
+    <label class="item">
+      <button class="button button-block button-assertive" ng-click="deleteWeight(weight.id)">Delete this weight</button>
+    </label>
   </ion-content>
 </ion-modal-view>

@@ -21,8 +21,11 @@
         <ion-item class="item-divider" ng-if="loggedIn">
             {{username}}
         </ion-item>
-        <ion-item menu-close href="#/app/users">
-          Users
+        <ion-item menu-close href="#/app/user/{{userId}}">
+          My Profile
+        </ion-item>
+        <ion-item menu-close href="#/app/friends">
+          Friends
         </ion-item>
         <ion-item class="item-divider">
           Services

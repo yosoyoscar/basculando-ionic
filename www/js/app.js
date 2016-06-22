@@ -30,44 +30,38 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     abstract: true,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
-  })
-
-  .state('app.search', {
-    url: '/search',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/search.html'
-      }
-    }
-  })
-
-  .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
-      }
     })
-    .state('app.users', {
-      url: '/users',
+
+    .state('app.friends', {
+      url: '/friends',
       views: {
         'menuContent': {
-          templateUrl: 'templates/users.html',
-          controller: 'UsersCtrl'
+          templateUrl: 'templates/friends.html',
+          controller: 'FriendsCtrl'
         }
       }
     })
 
-  .state('app.user', {
-    url: '/user/:userId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/user.html',
-        controller: 'UserCtrl'
+    .state('app.user', {
+      url: '/user/:userId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/user.html',
+          controller: 'UserCtrl'
+        }
       }
-    }
-  });
+    })
+
+    .state('app.profile', {
+      url: '/profile/:userId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/editProfile.html',
+          controller: 'EditProfileCtrl'
+        }
+      }
+    });
+
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/users');
+  $urlRouterProvider.otherwise('/app/user/0');
 });
