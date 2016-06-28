@@ -2,7 +2,7 @@
   <ion-header-bar>
     <h1 class="title">Login</h1>
     <div class="buttons">
-      <button class="button button-positive" ng-click="closeLogin()"><i class="icon ion-close-round"></i></button>
+      <button class="button button-icon icon ion-close-round" ng-click="closeLogin()"></button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -10,11 +10,11 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Username</span>
-          <input type="text" ng-model="loginData.username">
+          <input type="text" ng-model="loginData.username" required>
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="loginData.password">
+          <input type="password" ng-model="loginData.password" required>
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Log in</button>

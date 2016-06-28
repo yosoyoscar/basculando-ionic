@@ -2,7 +2,7 @@
   <ion-header-bar>
     <h1 class="title">Register</h1>
     <div class="buttons">
-      <button class="button button-positive" ng-click="closeRegister()"><i class="icon ion-close-round"></i></button>
+      <button class="button button-icon icon ion-close-round" ng-click="closeRegister()"></button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -10,11 +10,19 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Username</span>
-          <input type="text" ng-model="registration.username" required="true">
+          <input type="text" ng-model="registration.username" required>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Email</span>
+          <input type="email" ng-model="registration.email" required>
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="registration.password" required="true">
+          <input type="password" ng-model="registration.password" required>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Confirm Password</span>
+          <input type="password" ng-model="registration.password2" required>
         </label>
         <label class="item item-input">
         Female&nbsp;&nbsp;<label class="toggle toggle-calm">

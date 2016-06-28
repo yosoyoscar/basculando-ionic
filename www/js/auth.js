@@ -18,6 +18,7 @@ angular
               tokenId: response.data.tokenId,
               username: loginData.username
             };
+          $http.defaults.headers.common['x-access-token'] = response.data.tokenId;
           $rootScope.$broadcast('login:Successful');
           //console.log('Login Successful:' + JSON.stringify($rootScope.currentUser));
         }, function errorCallback(response) {
@@ -69,6 +70,7 @@ angular
 
     function logout() {
       $rootScope.currentUser = null;
+      $http.defaults.headers.common['x-access-token'] = undefined;
       $localStorage.remove('userinfo');
       $rootScope.$broadcast('logout:Successful');
     }
@@ -84,6 +86,7 @@ angular
               tokenId: response.tokenId,
               username: response.data.username
             };
+          $http.defaults.headers.common['x-access-token'] = response.tokenId;
           $rootScope.$broadcast('register:Successful');
         }, function errorCallback(response) {
         // called asynchronously if an error occurs or server returns response with an error status.

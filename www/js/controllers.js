@@ -1,9 +1,6 @@
 angular.module('starter.controllers', [])
 
-//.constant('baseURL', 'https://weight-control.herokuapp.com')
-//.constant('baseURL', 'http://localhost:5000')
-
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $localStorage, AuthService, baseURL, $rootScope, $location) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $localStorage, $ionicPopup, AuthService, baseURL, $rootScope, $location) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -87,10 +84,18 @@ angular.module('starter.controllers', [])
   // Perform the login action when the user submits the login form
   $scope.doRegister = function () {
       console.log('Doing registration', $scope.registration);
-      $scope.loginData.username = $scope.registration.username;
-      $scope.loginData.password = $scope.registration.password;
-
-      AuthService.register($scope.registration);
+      if ($scope.registration.password === $scope.registration.password2){
+        $scope.loginData.username = $scope.registration.username;
+        $scope.loginData.password = $scope.registration.password;
+        AuthService.register($scope.registration);
+      }
+      else{
+          var message = '<div><p>You entered two different passwords.</p></div>';
+          var alertPopup = $ionicPopup.alert({
+            title: '<h4>Registration Failed!</h4>',
+            template: message
+          });
+      }
   };
 
   $rootScope.$on('register:Successful', function () {
@@ -105,17 +110,14 @@ angular.module('starter.controllers', [])
   $scope.loggedIn = AuthService.isAuthenticated();
 
   var loadFriends = function (){
-      var req = { method: 'GET',
-                  url: baseURL + '/users/' +  AuthService.getUserId() + '/friends',
-                  headers: { 'x-access-token': AuthService.getTokenId() }
+      var req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/friends'
+                  //,headers: { 'x-access-token': AuthService.getTokenId() }
       }
       $http(req).then(
         function successCallback(response) {
-        // this callback will be called asynchronously when the response is available
           $scope.friends = response.data;
           $scope.$broadcast('scroll.refreshComplete');
         }, function errorCallback(response) {
-        // called asynchronously if an error occurs or server returns response with an error status.
           console.log('err response:' + JSON.stringify(response));
         });
   }
@@ -168,16 +170,13 @@ angular.module('starter.controllers', [])
     if (!$stateParams.userId || $stateParams.userId == 0){
       $stateParams.userId = AuthService.getUserId();
     }
-    var req = { method: 'GET',
-                url: baseURL + '/users/' +  $stateParams.userId + '/profile',
-                headers: { 'x-access-token': AuthService.getTokenId() }
+    var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId + '/profile'
+                //,headers: { 'x-access-token': AuthService.getTokenId() }
     }
     $http(req).then(
       function successCallback(response) {
-      // this callback will be called asynchronously when the response is available
         $scope.user = response.data;
       }, function errorCallback(response) {
-      // called asynchronously if an error occurs or server returns response with an error status.
         console.log('err response:' + JSON.stringify(response));
       });
   }
@@ -186,20 +185,16 @@ angular.module('starter.controllers', [])
     if (!$stateParams.userId || $stateParams.userId == 0){
       $stateParams.userId = AuthService.getUserId();
     }
-    var req = { method: 'GET',
-                url: baseURL + '/users/' +  $stateParams.userId + '/weights',
-                headers: { 'x-access-token': AuthService.getTokenId() }
+    var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId + '/weights'
+                //,headers: { 'x-access-token': AuthService.getTokenId() }
     }
     $http(req).then(
       function successCallback(response) {
-        // this callback will be called asynchronously when the response is available
         for (var i = 0; i < response.data.length; i++) {
           response.data[i].date = new Date(response.data[i].date);
         }
-        //console.log(response.data);
         $scope.weights = response.data;
       }, function errorCallback(response) {
-      // called asynchronously if an error occurs or server returns response with an error status.
         console.log('err response:' + JSON.stringify(response));
       });
   }
@@ -208,14 +203,12 @@ angular.module('starter.controllers', [])
     if (!$stateParams.userId || $stateParams.userId == 0){
       $stateParams.userId = AuthService.getUserId();
     }
-    var req = { method: 'POST',
-                url: baseURL + '/users/' +  $stateParams.userId + '/weights',
-                headers: { 'x-access-token': AuthService.getTokenId() },
+    var req = { method: 'POST', url: baseURL + '/users/' +  $stateParams.userId + '/weights',
+                //headers: { 'x-access-token': AuthService.getTokenId() },
                 data: {weight : $scope.newWeight.weight, comments : $scope.newWeight.comments}
     }
     $http(req).then(
       function successCallback(response) {
-      // this callback will be called asynchronously when the response is available
         for (var i = 0; i < response.data.length; i++) {
           response.data[i].date = new Date(response.data[i].date);
         }
@@ -223,7 +216,6 @@ angular.module('starter.controllers', [])
         $scope.newWeight = {comments : ''};
         loadProfile();
       }, function errorCallback(response) {
-      // called asynchronously if an error occurs or server returns response with an error status.
         console.log('err response:' + JSON.stringify(response));
       });
   }
@@ -233,9 +225,8 @@ angular.module('starter.controllers', [])
     if (!$stateParams.userId || $stateParams.userId == 0){
       $stateParams.userId = AuthService.getUserId();
     }
-    var req = { method: 'DELETE',
-                url: baseURL + '/users/' +  $stateParams.userId + '/weights/' + id,
-                headers: { 'x-access-token': AuthService.getTokenId }
+    var req = { method: 'DELETE', url: baseURL + '/users/' +  $stateParams.userId + '/weights/' + id
+                //,headers: { 'x-access-token': AuthService.getTokenId }
     }
     $http(req).then(
       function successCallback(response) {
@@ -272,19 +263,16 @@ angular.module('starter.controllers', [])
     if (!$stateParams.userId || $stateParams.userId == 0){
       $stateParams.userId = AuthService.getUserId();
     }
-    var req = { method: 'PUT',
-                url: baseURL + '/users/' +  $stateParams.userId + '/weights/' + $scope.weight.id,
-                headers: { 'x-access-token': AuthService.getTokenId },
+    var req = { method: 'PUT', url: baseURL + '/users/' +  $stateParams.userId + '/weights/' + $scope.weight.id,
+                //headers: { 'x-access-token': AuthService.getTokenId },
                 data: {date: $scope.weight.date , weight : $scope.weight.weight, reference : $scope.weight.reference, comments : $scope.weight.comments}
     }
     $http(req).then(
       function successCallback(response) {
-      // this callback will be called asynchronously when the response is available
         loadProfile();
         loadWeights();
         $scope.closeWeight();
       }, function errorCallback(response) {
-      // called asynchronously if an error occurs or server returns response with an error status.
         console.log('err response:' + JSON.stringify(response));
       });
   };
@@ -317,9 +305,8 @@ angular.module('starter.controllers', [])
   $scope.user = [];
 
   var loadUserData = function (){
-      var req = { method: 'GET',
-                  url: baseURL + '/users/' +  $stateParams.userId,
-                  headers: { 'x-access-token': AuthService.getTokenId() }
+      var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId
+                  //,headers: { 'x-access-token': AuthService.getTokenId() }
       }
       $http(req).then(
         function successCallback(response) {
@@ -331,9 +318,8 @@ angular.module('starter.controllers', [])
   }
 
   $scope.updateUser = function(){
-    var req = { method: 'PUT',
-                url: baseURL + '/users/' +  $stateParams.userId,
-                headers: { 'x-access-token': AuthService.getTokenId },
+    var req = { method: 'PUT', url: baseURL + '/users/' +  $stateParams.userId,
+                //headers: { 'x-access-token': AuthService.getTokenId },
                 data: {
                   male: $scope.user.male,
                   height: $scope.user.height,
