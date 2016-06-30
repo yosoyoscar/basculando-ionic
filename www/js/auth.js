@@ -34,7 +34,7 @@ angular
           });
         });
     }
-      
+
     function isAuthenticated() {
       if ($rootScope.currentUser) {
         return true;
@@ -43,7 +43,7 @@ angular
         return false;
       }
     }
-      
+
     function getUsername() {
       return $rootScope.currentUser.username;
     }

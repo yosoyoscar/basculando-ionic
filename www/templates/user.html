@@ -1,6 +1,6 @@
 <ion-view view-title="Profile">
   <ion-nav-buttons side="secondary">
-    <div class="buttons" ng-if="loggedIn">
+    <div ng-if="user.write" class="buttons" ng-if="loggedIn">
       <button class="button button-icon icon ion-edit" ng-click="editProfile(user.id)"></button>
     </div>
   </ion-nav-buttons>
@@ -24,7 +24,10 @@
         <img ng-if="user.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
         <img ng-if="!user.male" ng-src="https://weight-control.herokuapp.com/images/girl.png">
         <h2>{{user.username}}</h2>
-        <p>IMC {{user.imc | number : 2}}<span class="badge badge-assertive">{{user.imcdescription}}</span></p>
+        <p>IMC {{user.imc | number : 2}}
+           <span ng-if="!user.percentil" class="badge badge-assertive">{{user.imcdescription}}</span>
+           <span ng-if="user.percentil" class="badge badge-assertive">P {{user.percentil}}</span>
+        </p>
       </div>
 
       <div class="item item-body" align="center">
@@ -47,7 +50,7 @@
     
     <div class="list" ng-if="loggedIn">
     
-      <form ng-submit="addWeight()">
+      <form ng-if="user.write" ng-submit="addWeight()">
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-speedometer placeholder-icon"></i>

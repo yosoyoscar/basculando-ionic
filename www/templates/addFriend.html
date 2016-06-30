@@ -1,0 +1,25 @@
+<ion-view view-title="Add Friends">
+  <ion-nav-buttons side="secondary">
+    <div class="buttons" ng-if="loggedIn">
+      <button class="button button-icon icon ion-close" ng-click="close()"></button>
+    </div>
+  </ion-nav-buttons>
+  <ion-content>
+
+    <div class="list list-inset">
+      <label class="item item-input">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="text" placeholder="Search friend" ng-model="search.searchText" ng-change="search()">
+      </label>
+    </div>
+
+    <div class="list">
+      <a class="item item-avatar" ng-repeat="friend in searchResult | orderBy: 'username'" on-tap="onTap(friend.id, friend.username)">
+        <img ng-if="friend.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
+        <img ng-if="!friend.male" ng-src="https://weight-control.herokuapp.com/images/girl.png">
+        <h2>{{friend.username}}</h2>
+      </a>
+    </div>
+
+  </ion-content>
+</ion-view>

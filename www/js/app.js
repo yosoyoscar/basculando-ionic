@@ -60,7 +60,29 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           controller: 'EditProfileCtrl'
         }
       }
-    });
+    })
+
+    .state('app.addFriend', {
+      url: '/addFriend',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/addFriend.html',
+          controller: 'AddFriendCtrl'
+        }
+      }
+    })
+
+    .state('app.pendingFriends', {
+      url: '/pendingFriends',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/pendingFriends.html',
+          controller: 'PendingFriendsCtrl'
+        }
+      }
+    })
+
+    ;
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/user/0');

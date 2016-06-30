@@ -105,8 +105,10 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('FriendsCtrl', function($scope, $http, $localStorage, baseURL, AuthService, $rootScope) {
+.controller('FriendsCtrl', function($scope, $http, $localStorage, baseURL, AuthService, $rootScope, $location, $ionicPopup) {
   $scope.friends = [];
+  $scope.numFriendsWhoSeeMe = 0;
+  $scope.pendingFriends = false;
   $scope.loggedIn = AuthService.isAuthenticated();
 
   var loadFriends = function (){
@@ -116,7 +118,21 @@ angular.module('starter.controllers', [])
       $http(req).then(
         function successCallback(response) {
           $scope.friends = response.data;
-          $scope.$broadcast('scroll.refreshComplete');
+          req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/whoisconnectedtome' }
+          $http(req).then(
+            function successCallback(response) {
+              $scope.numFriendsWhoSeeMe = response.data.length;
+              $scope.pendingFriends = false;
+              for (var i=0; i<response.data.length; i++){
+                if (response.data[i].pending){
+                  $scope.pendingFriends = true;
+                  break;
+                }
+              }
+              $scope.$broadcast('scroll.refreshComplete');
+            }, function errorCallback(response) {
+              console.log('err response:' + JSON.stringify(response));
+            });
         }, function errorCallback(response) {
           console.log('err response:' + JSON.stringify(response));
         });
@@ -139,6 +155,35 @@ angular.module('starter.controllers', [])
     if ($scope.loggedIn){
       loadFriends();
     }
+  }
+
+  $scope.deleteFriend = function(id, username){
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Are you sure?',
+      template: username + ' is not my friend any more!'
+    });
+
+    confirmPopup.then(function(res) {
+      if(res) {
+        //console.log('You are sure');
+        var req = { method: 'DELETE', url: baseURL + '/users/' +  AuthService.getUserId() + '/link/' + id }
+        $http(req).then(
+          function successCallback(response) {
+            loadFriends();
+          }, function errorCallback(response) {
+            console.log('AddFriendCtrl.onTap err response:' + JSON.stringify(response));
+          });
+      }
+    });
+
+  }
+
+  $scope.addFriend = function() {
+    $location.path('/app/addFriend');
+  }
+
+  $scope.pending = function() {
+    $location.path('/app/pendingFriends');
   }
 })
 
@@ -279,22 +324,22 @@ angular.module('starter.controllers', [])
 
 
   $scope.onTap = function(id) {
-    for (var i = 0; i < $scope.weights.length; i++) {
-      if ($scope.weights[i].id == id){
-        break;
+    if ($scope.user.write){
+      for (var i = 0; i < $scope.weights.length; i++) {
+        if ($scope.weights[i].id == id){
+          break;
+        }
       }
+      $scope.weight = $scope.weights[i];
+      $scope.showWeightModal();
     }
-    $scope.weight = $scope.weights[i];
-    $scope.showWeightModal();
   }
 
   $scope.editProfile = function(id) {
-    //console.log('Editing profile:' + '/app/profile/' + id);
     $location.path('/app/profile/' + id);
   }
 
   if(AuthService.isAuthenticated()){
-    //console.log('Normal call');
     loadProfile();
     loadWeights();
   }
@@ -337,4 +382,115 @@ angular.module('starter.controllers', [])
 
   loadUserData();
 })
+
+.controller('AddFriendCtrl',function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {
+  $scope.search = {searchText : ''};
+  $scope.searchResult = [];
+
+  $scope.search = function() {
+    if ($scope.search.searchText.length < 3){
+      $scope.searchResult = [];
+    }
+    else{
+      //console.log('Looking for friends:' + $scope.search.searchText);
+      var req = { method: 'GET', url: baseURL + '/users/' + AuthService.getUserId() + '/search/' + $scope.search.searchText }
+      $http(req).then(
+        function successCallback(response) {
+          $scope.searchResult = response.data;
+        }, function errorCallback(response) {
+          console.log('err response:' + JSON.stringify(response));
+        });
+    }
+  }
+
+  $scope.onTap = function(id, username) {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Are you sure?',
+      template: 'Yep, ' + username + ' is my friend.'
+    });
+
+    confirmPopup.then(function(res) {
+      if(res) {
+        //console.log('You are sure');
+        var req = { method: 'POST', url: baseURL + '/users/' +  AuthService.getUserId() + '/requestfriendship/' + id }
+        $http(req).then(
+          function successCallback(response) {
+            //console.log('AddFriendCtrl.onTap OK:' + JSON.stringify(response));
+            var alertPopup = $ionicPopup.alert({
+              title: '<h4>Success!</h4>',
+              template: response.data.message
+            });
+            $scope.close();
+          }, function errorCallback(response) {
+            console.log('AddFriendCtrl.onTap err response:' + JSON.stringify(response));
+          });
+      }
+    });
+  }
+
+  $scope.close = function() {
+    $ionicHistory.goBack();
+  }
+})
+
+.controller('PendingFriendsCtrl',function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {
+
+  $scope.allFriends = [];
+  $scope.numFriends = 0;
+  $scope.numPendings = 0;
+
+  var req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/whoisconnectedtome' }
+  $http(req).then(
+    function successCallback(response) {
+      //console.log('err response:' + JSON.stringify(response));
+      $scope.allFriends = response.data;
+      updateConts();
+    }, function errorCallback(response) {
+      console.log('err response:' + JSON.stringify(response));
+    });
+
+  $scope.accept = function(id, write){
+    var req = { method: 'PUT', url: baseURL + '/users/' +  AuthService.getUserId() + '/acceptfriendship/' + id, data: {"write":write} }
+    $http(req).then(
+      function successCallback(response) {
+        $scope.allFriends = response.data;
+        updateConts();
+      }, function errorCallback(response) {
+        console.log('err response:' + JSON.stringify(response));
+      });
+  }
+
+  $scope.deny = function(id, username){
+    var req = { method: 'PUT', url: baseURL + '/users/' +  AuthService.getUserId() + '/denyfriendship/' + id }
+    $http(req).then(
+      function successCallback(response) {
+        $scope.allFriends = response.data;
+        updateConts();
+        var alertPopup = $ionicPopup.alert({
+          title: '<h4>Deleted!</h4>',
+          template: username + ' can\'t see you anymore!'
+        });
+      }, function errorCallback(response) {
+        console.log('err response:' + JSON.stringify(response));
+      });
+  }
+
+  $scope.close = function() {
+    $ionicHistory.goBack();
+  }
+
+  var updateConts = function(){
+    $scope.numFriends = 0;
+    $scope.numPendings = 0;
+    for (var i=0; i<$scope.allFriends.length; i++){
+      if ($scope.allFriends[i].pending){
+        $scope.numPendings++;
+      }
+      else{
+        $scope.numFriends++;
+      }
+    }
+  }
+})
+
 ;
