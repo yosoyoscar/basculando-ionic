@@ -5,24 +5,12 @@
     </div>
   </ion-nav-buttons>
   <ion-content>
-    <div class="card" align="center" ng-if="!loggedIn">
-      <div class="item item-text-wrap">
-       You are not logged in.
-       <br/><br/>
-       Please
-       <br/><br/>
-       <button class="button button-full button-positive" ng-click="login()">Login</button>
-       <br/>
-       or
-       <br/><br/>
-       <button class="button button-full button-calm" ng-click="register()">Register</button>
-      </div>
-    </div>
+    <div ng-include src="'templates/logRegRes.html'"></div>
     <div class="list card" ng-if="loggedIn">
 
       <div class="item item-avatar">
-        <img ng-if="user.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
-        <img ng-if="!user.male" ng-src="https://weight-control.herokuapp.com/images/girl.png">
+        <img ng-if="user.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
+        <img ng-if="!user.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
         <h2>{{user.username}}</h2>
         <p>IMC {{user.imc | number : 2}}
            <span ng-if="!user.percentil" class="badge badge-assertive">{{user.imcdescription}}</span>

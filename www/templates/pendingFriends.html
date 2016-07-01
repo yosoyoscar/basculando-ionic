@@ -7,7 +7,7 @@
   <ion-content>
     <ion-list>
       <div class="item item-divider">Pending</div>
-      <ion-item ng-if="!numPending">
+      <ion-item ng-if="!numPendings">
         <p>No pending invitations</p>
       </ion-item>
       <ion-item ng-repeat="friend in allFriends | filter : {pending : true}">
@@ -15,8 +15,8 @@
           <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
           <div class="col col-70" align="left">
             <h1>
-              <img ng-if="friend.male" ng-src="https://weight-control.herokuapp.com/images/boy.png" width="30">
-              <img ng-if="!friend.male" ng-src="https://weight-control.herokuapp.com/images/girl.png" width="30">
+              <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png" width="30">
+              <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png" width="30">
               {{friend.username}}
             </h1>
           </div>
@@ -27,18 +27,18 @@
       </ion-item>
       <div class="item item-divider">Connected</div>
       <ion-item ng-if="!numFriends">
-        <p>No connected friends</p>
+        <p>No connected friends yet</p>
       </ion-item>
       <ion-item ng-if="numFriends">
-        <div align="right"><small>Can weight you?</small></div>
+        <div align="right"><small>Full access?</small></div>
       </ion-item>
       <ion-item ng-repeat="friend in allFriends | filter : {pending : false}">
         <div class="row">
           <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
           <div class="col col-70" align="left">
             <h1>
-              <img ng-if="friend.male" ng-src="https://weight-control.herokuapp.com/images/boy.png" width="30">
-              <img ng-if="!friend.male" ng-src="https://weight-control.herokuapp.com/images/girl.png" width="30">
+              <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png" width="30">
+              <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png" width="30">
               {{friend.username}}
             </h1>
           </div>

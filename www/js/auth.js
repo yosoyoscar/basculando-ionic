@@ -2,8 +2,8 @@
 
 angular
   .module('starter.services',[])
-  .constant('baseURL', 'https://weight-control.herokuapp.com')
-  //.constant('baseURL', 'http://localhost:5000')
+  //.constant('baseURL', 'https://basculando.herokuapp.com')
+  .constant('baseURL', 'http://localhost:5000')
 
   .factory('AuthService', ['$q', '$rootScope', '$ionicPopup', '$http', 'baseURL', '$localStorage',
     function($q, $rootScope, $ionicPopup, $http, baseURL, $localStorage) {
@@ -108,6 +108,22 @@ angular
           });
         });
     }
+    
+    function resetPassword(username){
+        $http.post(baseURL + '/users/forgot', {"username":username}).then(
+        function successCallback(response) {
+            var alertPopup = $ionicPopup.alert({
+                title: '<h4>Done!</h4>',
+                template: 'Please, check your email for instructions on how to reset your password.'
+            });
+        }, function errorCallback(response) {
+            console.log('forgot error response:' + JSON.stringify(response));
+            var alertPopup = $ionicPopup.alert({
+                title: '<h4>Error!</h4>',
+                template: response.data.reason
+            });
+        });
+    }
 
     return {
       login: login,
@@ -116,7 +132,8 @@ angular
       isAuthenticated: isAuthenticated,
       getUsername: getUsername,
       getUserId: getUserId,
-      getTokenId: getTokenId
+      getTokenId: getTokenId,
+      resetPassword: resetPassword
     };
   }])
 

@@ -15,8 +15,8 @@
 
     <div class="list">
       <a class="item item-avatar" ng-repeat="friend in searchResult | orderBy: 'username'" on-tap="onTap(friend.id, friend.username)">
-        <img ng-if="friend.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
-        <img ng-if="!friend.male" ng-src="https://weight-control.herokuapp.com/images/girl.png">
+        <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
+        <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
         <h2>{{friend.username}}</h2>
       </a>
     </div>

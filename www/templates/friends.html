@@ -11,24 +11,12 @@
       pulling-text="Pull to refresh..."
       on-refresh="doRefresh()">
     </ion-refresher>
-    <div class="card" align="center" ng-if="!loggedIn">
-      <div class="item item-text-wrap">
-       You are not logged in.
-       <br/><br/>
-       Please
-       <br/><br/>
-       <button class="button button-full button-positive" ng-click="login()">Login</button>
-       <br/>
-       or
-       <br/><br/>
-       <button class="button button-full button-calm" ng-click="register()">Register</button>
-      </div>
-    </div>
+    <div ng-include src="'templates/logRegRes.html'"></div>
     <div align="center" ng-if="friends.length">Long tap on a friend to delete</div>
     <ion-list ng-if="loggedIn">
       <ion-item ng-repeat="friend in friends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
-        <img ng-if="friend.male" ng-src="https://weight-control.herokuapp.com/images/boy.png">
-        <img ng-if="!friend.male" ng-src="https://weight-control.herokuapp.com/images/girl.png">
+        <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
+        <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
         <h1>{{friend.username}}</h1>
          <div class="row">
           <div class="col col-33"><i class="icon ion-speedometer"></i> {{friend.weight | number : 2}}</div>

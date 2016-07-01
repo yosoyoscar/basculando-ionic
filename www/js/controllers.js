@@ -12,6 +12,7 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.loginData = $localStorage.getObject('userinfo','{}');
   $scope.registration = {username: '', password: '', male: true};
+  $scope.reset = {username: ''};
   $scope.loggedIn = false;
   $scope.userId = 0;
 
@@ -103,6 +104,30 @@ angular.module('starter.controllers', [])
       $scope.closeRegister();
       AuthService.login($scope.loginData);
   });
+    
+// Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/resetPassword.html', {
+      scope: $scope
+  }).then(function (modal) {
+      $scope.resetform = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeReset = function () {
+      $scope.resetform.hide();
+  };
+
+  // Open the login modal
+  $scope.resetPassword = function () {
+      $scope.resetform.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.doResetPassword = function () {
+      //console.log('Reseting password for ', $scope.reset);
+      AuthService.resetPassword($scope.reset.username);
+      $scope.closeReset();
+  };
 })
 
 .controller('FriendsCtrl', function($scope, $http, $localStorage, baseURL, AuthService, $rootScope, $location, $ionicPopup) {
@@ -369,7 +394,8 @@ angular.module('starter.controllers', [])
                   male: $scope.user.male,
                   height: $scope.user.height,
                   birthdate: $scope.user.birthdate,
-                  goal: $scope.user.goal}
+                  goal: $scope.user.goal,
+                  email: $scope.user.email }
     }
     $http(req).then(
       function successCallback(response) {
@@ -490,6 +516,8 @@ angular.module('starter.controllers', [])
         $scope.numFriends++;
       }
     }
+    //console.log('$scope.numFriends:' + $scope.numFriends);
+    //console.log('$scope.numPendings:' + $scope.numPendings);
   }
 })
 
