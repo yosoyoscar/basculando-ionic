@@ -6,23 +6,27 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doRegister()">
+    <form name="registrationForm" ng-submit="doRegister()">
       <div class="list">
         <label class="item item-input">
+          <span ng-show="registrationForm.username.$error.required"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Username</span>
-          <input type="text" ng-model="registration.username" required>
+          <input type="text" name="username" ng-model="registration.username" required>
         </label>
         <label class="item item-input">
+          <span ng-show="registrationForm.email.$error.required || registrationForm.email.$error.email"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Email</span>
-          <input type="email" ng-model="registration.email" required>
+          <input type="email" name="email" ng-model="registration.email" required>
         </label>
         <label class="item item-input">
+          <span ng-show="registrationForm.password.$error.required"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Password</span>
-          <input type="password" ng-model="registration.password" required>
+          <input type="password" name="password" ng-model="registration.password" required>
         </label>
         <label class="item item-input">
+          <span ng-show="registrationForm.password2.$error.required || registrationForm.password.$viewValue != registrationForm.password2.$viewValue"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Confirm Password</span>
-          <input type="password" ng-model="registration.password2" required>
+          <input type="password" name="password2" ng-model="registration.password2" required>
         </label>
         <label class="item item-input">
         Female&nbsp;&nbsp;<label class="toggle toggle-calm">

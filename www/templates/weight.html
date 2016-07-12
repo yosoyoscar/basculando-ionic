@@ -6,19 +6,22 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="updateWeight()">
+    <form name="weightForm" ng-submit="updateWeight()">
       <div class="list">
         <label class="item item-input">
+          <span ng-show="weightForm.weight.$error.required || weightForm.weight.$error.number || weightForm.weight.$error.min || weightForm.heiweightght.$error.max"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Weight</span>
-          <input type="number" step="any" ng-model="weight.weight">
+          <input type="number" name="weight" step="any" ng-model="weight.weight" min="1" max="180" required>
         </label>
         <label class="item item-input">
+          <span ng-show="weightForm.date.$error.required"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Date</span>
-          <input type="date" ng-model="weight.date">
+          <input type="date" name="date" ng-model="weight.date" required>
         </label>
         <label class="item item-input">
+          <span ng-show="weightForm.time.$error.required"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Time</span>
-          <input type="time" ng-model="weight.date">
+          <input type="time" name="time" ng-model="weight.date" required>
         </label>
         <label class="item item-input item-stacked-label">
           <span class="input-label">Comments</span>

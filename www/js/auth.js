@@ -2,8 +2,8 @@
 
 angular
   .module('starter.services',[])
-  //.constant('baseURL', 'https://basculando.herokuapp.com')
-  .constant('baseURL', 'http://localhost:5000')
+  .constant('baseURL', 'https://basculando.herokuapp.com')
+  //.constant('baseURL', 'http://localhost:5000')
 
   .factory('AuthService', ['$q', '$rootScope', '$ionicPopup', '$http', 'baseURL', '$localStorage',
     function($q, $rootScope, $ionicPopup, $http, baseURL, $localStorage) {
@@ -23,7 +23,13 @@ angular
           //console.log('Login Successful:' + JSON.stringify($rootScope.currentUser));
         }, function errorCallback(response) {
         // called asynchronously if an error occurs or server returns response with an error status.
-          var message = '<div><p>' +  response.status + '</p><p>' + response.data.reason + '</p></div>';
+          console.log('Login-response:' + JSON.stringify(response));
+          if (response.data){
+            var message = '<div><p>' +  response.status + '</p><p>' + response.data.reason + '</p></div>';
+          }
+          else{
+            var message = '<div><p>Ops, unluckily there was an awkward error. Please try again later.</p></div>';
+          }
           var alertPopup = $ionicPopup.alert({
             title: '<h4>Login Failed!</h4>',
             template: message
@@ -32,6 +38,7 @@ angular
           alertPopup.then(function(res) {
             console.log('Login Failed!');
           });
+          $rootScope.$broadcast('login:Unsuccessful');
         });
     }
 

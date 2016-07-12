@@ -104,7 +104,7 @@ angular.module('starter.controllers', [])
       $scope.closeRegister();
       AuthService.login($scope.loginData);
   });
-    
+
 // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/resetPassword.html', {
       scope: $scope
@@ -213,14 +213,23 @@ angular.module('starter.controllers', [])
 })
 
 .controller('UserCtrl', function($scope, $rootScope, $http, $stateParams, $ionicModal, $localStorage, $location, baseURL, AuthService) {
+  if ($scope.loginData && $scope.loginData.username && $scope.loginData.password){
+    $scope.spinner = true;
+  }
+  else{
+    $scope.spinner = false;
+  }
   $scope.newWeight = {comments : ''};
   $scope.loggedIn = AuthService.isAuthenticated();
 
   $rootScope.$on('login:Successful', function () {
-    //console.log('Login call');
     $scope.loggedIn = true;
     loadProfile();
     loadWeights();
+  });
+
+  $rootScope.$on('login:Unsuccessful', function () {
+    $scope.spinner = false;
   });
 
   $rootScope.$on('logout:Successful', function () {
@@ -234,7 +243,6 @@ angular.module('starter.controllers', [])
     loadProfile();
   });
 
-
   var loadProfile = function (){
     //console.log('$stateParams.userId:' + $stateParams.userId);
     if (!$stateParams.userId || $stateParams.userId == 0){
@@ -245,6 +253,7 @@ angular.module('starter.controllers', [])
     }
     $http(req).then(
       function successCallback(response) {
+        $scope.spinner = false;
         $scope.user = response.data;
       }, function errorCallback(response) {
         console.log('err response:' + JSON.stringify(response));
@@ -260,6 +269,7 @@ angular.module('starter.controllers', [])
     }
     $http(req).then(
       function successCallback(response) {
+        $scope.spinner = false;
         for (var i = 0; i < response.data.length; i++) {
           response.data[i].date = new Date(response.data[i].date);
         }
@@ -324,7 +334,6 @@ angular.module('starter.controllers', [])
 
   // Open the login modal
   $scope.showWeightModal = function() {
-    //console.log('$scope.weight:' + JSON.stringify($scope.weight));
     $scope.modal.show();
   };
 
