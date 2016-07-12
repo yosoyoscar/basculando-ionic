@@ -7,24 +7,56 @@
     </div>
   </ion-nav-buttons>
   <ion-content>
-    <ion-refresher
-      pulling-text="Pull to refresh..."
-      on-refresh="doRefresh()">
-    </ion-refresher>
-    <div ng-include src="'templates/logRegRes.html'"></div>
-    <div align="center" ng-if="friends.length">Long tap on a friend to delete</div>
-    <ion-list ng-if="loggedIn">
-      <ion-item ng-repeat="friend in friends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
-        <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
-        <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
-        <h1>{{friend.username}}</h1>
-         <div class="row">
-          <div class="col col-33"><i class="icon ion-speedometer"></i> {{friend.weight | number : 2}}</div>
-          <div class="col col-33"><i class="icon ion-flag"></i> {{friend.goal | number : 2}}</div>
-          <div class="col col-33" ng-if="friend.weight <= friend.goal"><i class="icon ion-arrow-down-c"> {{friend.goal - friend.weight | number : 2}} Kg</i></div>
-          <div class="col col-33" ng-if="friend.weight > friend.goal"><i class="icon ion-arrow-up-c"> {{friend.weight - friend.goal | number : 2}} Kg</i></div>
-        </div>
-      </ion-item>
-    </ion-list>
+	<ion-tabs class="tabs-stable">
+
+	  <ion-tab title="32 Friends">
+	    <br/><br/><br/><br/><br/>
+	    <div align="center" ng-if="friends.length">Long tap on a friend to delete</div>
+	    <ion-list ng-if="loggedIn">
+	      <ion-item ng-repeat="friend in friends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
+	        <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
+	        <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
+	        <h1>{{friend.username}}</h1>
+	         <div class="row">
+	          <div class="col col-33"><i class="icon ion-speedometer"></i> {{friend.weight | number : 2}}</div>
+	          <div class="col col-33"><i class="icon ion-flag"></i> {{friend.goal | number : 2}}</div>
+	          <div class="col col-33" ng-if="friend.weight <= friend.goal"><i class="icon ion-arrow-down-c"> {{friend.goal - friend.weight | number : 2}} Kg</i></div>
+	          <div class="col col-33" ng-if="friend.weight > friend.goal"><i class="icon ion-arrow-up-c"> {{friend.weight - friend.goal | number : 2}} Kg</i></div>
+	        </div>
+	      </ion-item>
+	    </ion-list>
+	  </ion-tab>
+
+	  <ion-tab title="4 Pending">
+	  	<br/><br/><br/><br/><br/>
+	    <ion-list>
+	      <div class="item item-divider">Pending</div>
+	      <ion-item ng-if="!numPendings">
+	        <p>No pending invitations</p>
+	      </ion-item>
+	      <ion-item ng-repeat="friend in allFriends | filter : {pending : true}">
+	        <div class="row">
+	          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
+	          <div class="col col-70" align="left">
+	            <h1>
+	              <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png" width="30">
+	              <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png" width="30">
+	              {{friend.username}}
+	            </h1>
+	          </div>
+	          <div class="col col-15" align="right">
+	            <button class="button button-small icon ion-checkmark-round button-balanced" ng-click="accept(friend.id, false)"></button>
+	          </div>
+	        </div>
+	      </ion-item>
+	    </ion-list>
+	  </ion-tab>
+
+	  <ion-tab title="{{numFriendsWhoSeeMe}} Seeing me">
+	  	<br/><br/><br/><br/><br/>
+	    <p>Tab 3 content</p>
+	  </ion-tab>
+
+	</ion-tabs>
   </ion-content>
 </ion-view>

@@ -382,11 +382,10 @@ angular.module('starter.controllers', [])
 
 .controller('EditProfileCtrl', function($scope, $http, $stateParams, baseURL, AuthService, $rootScope, $ionicHistory) {
   $scope.user = [];
+  $scope.newPassword = {passwordNew: '', passwordConfirm: ''};
 
   var loadUserData = function (){
-      var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId
-                  //,headers: { 'x-access-token': AuthService.getTokenId() }
-      }
+      var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId }
       $http(req).then(
         function successCallback(response) {
           response.data.birthdate = new Date(response.data.birthdate);
@@ -398,7 +397,6 @@ angular.module('starter.controllers', [])
 
   $scope.updateUser = function(){
     var req = { method: 'PUT', url: baseURL + '/users/' +  $stateParams.userId,
-                //headers: { 'x-access-token': AuthService.getTokenId },
                 data: {
                   male: $scope.user.male,
                   height: $scope.user.height,
@@ -416,6 +414,42 @@ angular.module('starter.controllers', [])
   }
 
   loadUserData();
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/changePassword.html', {
+      scope: $scope
+  }).then(function (modal) {
+      $scope.changepasswordform = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeChangePassword = function () {
+      $scope.changepasswordform.hide();
+  };
+
+  // Open the login modal
+  $scope.changePassword = function () {
+      $scope.changepasswordform.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.doChangePassword = function () {
+      console.log('Changing password', $scope.newPassword);
+      if ($scope.newPassword.passwordNew === $scope.newPassword.passwordConfirm){
+        AuthService.changePassword($scope.newPassword.passwordNew);
+      }
+      else{
+          var message = '<div><p>You entered two different passwords.</p></div>';
+          var alertPopup = $ionicPopup.alert({
+            title: '<h4>Fail to change password!</h4>',
+            template: message
+          });
+      }
+  };
+
+  $rootScope.$on('changePassword:Successful', function () {
+      $scope.closeChangePassword();
+  });
 })
 
 .controller('AddFriendCtrl',function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {

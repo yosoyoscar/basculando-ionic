@@ -23,7 +23,7 @@ angular
           //console.log('Login Successful:' + JSON.stringify($rootScope.currentUser));
         }, function errorCallback(response) {
         // called asynchronously if an error occurs or server returns response with an error status.
-          console.log('Login-response:' + JSON.stringify(response));
+          //console.log('Login-response:' + JSON.stringify(response));
           if (response.data){
             var message = '<div><p>' +  response.status + '</p><p>' + response.data.reason + '</p></div>';
           }
@@ -115,7 +115,27 @@ angular
           });
         });
     }
-    
+
+    function changePassword(newPassword) {
+      //console.log('baseURL:' + baseURL);
+      var putData ={password : newPassword};
+      $http.put(baseURL + '/users/' + getUserId() + '/password', putData).then(
+        function successCallback(response) {
+          console.log('register response:' + JSON.stringify(response));
+          $rootScope.$broadcast('changePassword:Successful');
+        }, function errorCallback(response) {
+          //console.log('register response:' + JSON.stringify(response));
+          message = '<div><p>' +  response.status + '</p><p>' + response.data.reason + '</p></div>';
+          var alertPopup = $ionicPopup.alert({
+            title: '<h4>Fail to change password!</h4>',
+            template: message
+          });
+
+          alertPopup.then(function(res) {
+            console.log('Change password Failed!');
+          });
+        });
+    }
     function resetPassword(username){
         $http.post(baseURL + '/users/forgot', {"username":username}).then(
         function successCallback(response) {
@@ -140,7 +160,8 @@ angular
       getUsername: getUsername,
       getUserId: getUserId,
       getTokenId: getTokenId,
-      resetPassword: resetPassword
+      resetPassword: resetPassword,
+      changePassword: changePassword
     };
   }])
 
