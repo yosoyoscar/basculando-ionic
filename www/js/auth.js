@@ -121,7 +121,7 @@ angular
       var putData ={password : newPassword};
       $http.put(baseURL + '/users/' + getUserId() + '/password', putData).then(
         function successCallback(response) {
-          console.log('register response:' + JSON.stringify(response));
+          //console.log('register response:' + JSON.stringify(response));
           $rootScope.$broadcast('changePassword:Successful');
         }, function errorCallback(response) {
           //console.log('register response:' + JSON.stringify(response));

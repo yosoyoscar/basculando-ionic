@@ -12,6 +12,7 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.loginData = $localStorage.getObject('userinfo','{}');
   $scope.registration = {username: '', password: '', male: true};
+  $scope.newPass = {pass: '', confirm: ''};
   $scope.reset = {username: ''};
   $scope.loggedIn = false;
   $scope.userId = 0;
@@ -58,7 +59,7 @@ angular.module('starter.controllers', [])
     $scope.userId = 0;
     $location.path('/app');
   };
-    
+
   $rootScope.$on('login:Successful', function () {
     $scope.loggedIn = AuthService.isAuthenticated();
     $scope.username = AuthService.getUsername();
@@ -128,88 +129,42 @@ angular.module('starter.controllers', [])
       AuthService.resetPassword($scope.reset.username);
       $scope.closeReset();
   };
-})
 
-.controller('FriendsCtrl', function($scope, $http, $localStorage, baseURL, AuthService, $rootScope, $location, $ionicPopup) {
-  $scope.friends = [];
-  $scope.numFriendsWhoSeeMe = 0;
-  $scope.pendingFriends = false;
-  $scope.loggedIn = AuthService.isAuthenticated();
+  $ionicModal.fromTemplateUrl('templates/changePassword.html', {
+      scope: $scope
+  }).then(function (modal) {
+      $scope.changePassword = modal;
+  });
 
-  var loadFriends = function (){
-      var req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/friends'
-                  //,headers: { 'x-access-token': AuthService.getTokenId() }
-      }
-      $http(req).then(
-        function successCallback(response) {
-          $scope.friends = response.data;
-          req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/whoisconnectedtome' }
-          $http(req).then(
-            function successCallback(response) {
-              $scope.numFriendsWhoSeeMe = response.data.length;
-              $scope.pendingFriends = false;
-              for (var i=0; i<response.data.length; i++){
-                if (response.data[i].pending){
-                  $scope.pendingFriends = true;
-                  break;
-                }
-              }
-              $scope.$broadcast('scroll.refreshComplete');
-            }, function errorCallback(response) {
-              console.log('err response:' + JSON.stringify(response));
-            });
-        }, function errorCallback(response) {
-          console.log('err response:' + JSON.stringify(response));
-        });
-  }
-
-  if (AuthService.getUserId()){
-      loadFriends();
+  $scope.closeChangePassword = function () {
+      $scope.changePassword.hide();
   };
 
-  $rootScope.$on('login:Successful', function () {
-      loadFriends();
-      $scope.loggedIn = true;
-  });
-  $rootScope.$on('logout:Successful', function () {
-      $scope.friends = [];
-      $scope.loggedIn = false;
-  });
+  $scope.newPassword = function () {
+      $scope.changePassword.show();
+  };
 
-  $scope.doRefresh = function() {
-    if ($scope.loggedIn){
-      loadFriends();
-    }
-  }
-
-  $scope.deleteFriend = function(id, username){
-    var confirmPopup = $ionicPopup.confirm({
-      title: 'Are you sure?',
-      template: username + ' is not my friend any more!'
-    });
-
-    confirmPopup.then(function(res) {
-      if(res) {
-        //console.log('You are sure');
-        var req = { method: 'DELETE', url: baseURL + '/users/' +  AuthService.getUserId() + '/link/' + id }
-        $http(req).then(
-          function successCallback(response) {
-            loadFriends();
-          }, function errorCallback(response) {
-            console.log('AddFriendCtrl.onTap err response:' + JSON.stringify(response));
+  $scope.doChangePassword = function () {
+      if ($scope.newPass.pass === $scope.newPass.confirm){
+        AuthService.changePassword($scope.newPass.pass);
+      }
+      else{
+          var message = '<div><p>You entered two different passwords.</p></div>';
+          var alertPopup = $ionicPopup.alert({
+            title: '<h4>Fail to change password!</h4>',
+            template: message
           });
       }
-    });
+  };
 
-  }
-
-  $scope.addFriend = function() {
-    $location.path('/app/addFriend');
-  }
-
-  $scope.pending = function() {
-    $location.path('/app/pendingFriends');
-  }
+  $rootScope.$on('changePassword:Successful', function () {
+      $scope.closeChangePassword();
+      var message = '<div><p>You have successfully changed your password.</p></div>';
+      var alertPopup = $ionicPopup.alert({
+        title: '<h4>Password changed!</h4>',
+        template: message
+      });
+  });
 })
 
 .controller('UserCtrl', function($scope, $rootScope, $http, $stateParams, $ionicModal, $localStorage, $location, baseURL, AuthService) {
@@ -356,7 +311,6 @@ angular.module('starter.controllers', [])
       });
   };
 
-
   $scope.onTap = function(id) {
     if ($scope.user.write){
       for (var i = 0; i < $scope.weights.length; i++) {
@@ -380,9 +334,8 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('EditProfileCtrl', function($scope, $http, $stateParams, baseURL, AuthService, $rootScope, $ionicHistory) {
+.controller('EditProfileCtrl', function($scope, $ionicModal, $http, $stateParams, baseURL, AuthService, $rootScope, $ionicHistory) {
   $scope.user = [];
-  $scope.newPassword = {passwordNew: '', passwordConfirm: ''};
 
   var loadUserData = function (){
       var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId }
@@ -393,7 +346,7 @@ angular.module('starter.controllers', [])
         }, function errorCallback(response) {
           console.log('err response:' + JSON.stringify(response));
         });
-  }
+  };
 
   $scope.updateUser = function(){
     var req = { method: 'PUT', url: baseURL + '/users/' +  $stateParams.userId,
@@ -403,7 +356,7 @@ angular.module('starter.controllers', [])
                   birthdate: $scope.user.birthdate,
                   goal: $scope.user.goal,
                   email: $scope.user.email }
-    }
+    };
     $http(req).then(
       function successCallback(response) {
         $rootScope.$broadcast('profile:update');
@@ -411,45 +364,9 @@ angular.module('starter.controllers', [])
       }, function errorCallback(response) {
         console.log('err response:' + JSON.stringify(response));
       });
-  }
+  };
 
   loadUserData();
-
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/changePassword.html', {
-      scope: $scope
-  }).then(function (modal) {
-      $scope.changepasswordform = modal;
-  });
-
-  // Triggered in the login modal to close it
-  $scope.closeChangePassword = function () {
-      $scope.changepasswordform.hide();
-  };
-
-  // Open the login modal
-  $scope.changePassword = function () {
-      $scope.changepasswordform.show();
-  };
-
-  // Perform the login action when the user submits the login form
-  $scope.doChangePassword = function () {
-      console.log('Changing password', $scope.newPassword);
-      if ($scope.newPassword.passwordNew === $scope.newPassword.passwordConfirm){
-        AuthService.changePassword($scope.newPassword.passwordNew);
-      }
-      else{
-          var message = '<div><p>You entered two different passwords.</p></div>';
-          var alertPopup = $ionicPopup.alert({
-            title: '<h4>Fail to change password!</h4>',
-            template: message
-          });
-      }
-  };
-
-  $rootScope.$on('changePassword:Successful', function () {
-      $scope.closeChangePassword();
-  });
 })
 
 .controller('AddFriendCtrl',function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {
@@ -499,68 +416,6 @@ angular.module('starter.controllers', [])
 
   $scope.close = function() {
     $ionicHistory.goBack();
-  }
-})
-
-.controller('PendingFriendsCtrl',function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {
-
-  $scope.allFriends = [];
-  $scope.numFriends = 0;
-  $scope.numPendings = 0;
-
-  var req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/whoisconnectedtome' }
-  $http(req).then(
-    function successCallback(response) {
-      //console.log('err response:' + JSON.stringify(response));
-      $scope.allFriends = response.data;
-      updateConts();
-    }, function errorCallback(response) {
-      console.log('err response:' + JSON.stringify(response));
-    });
-
-  $scope.accept = function(id, write){
-    var req = { method: 'PUT', url: baseURL + '/users/' +  AuthService.getUserId() + '/acceptfriendship/' + id, data: {"write":write} }
-    $http(req).then(
-      function successCallback(response) {
-        $scope.allFriends = response.data;
-        updateConts();
-      }, function errorCallback(response) {
-        console.log('err response:' + JSON.stringify(response));
-      });
-  }
-
-  $scope.deny = function(id, username){
-    var req = { method: 'PUT', url: baseURL + '/users/' +  AuthService.getUserId() + '/denyfriendship/' + id }
-    $http(req).then(
-      function successCallback(response) {
-        $scope.allFriends = response.data;
-        updateConts();
-        var alertPopup = $ionicPopup.alert({
-          title: '<h4>Deleted!</h4>',
-          template: username + ' can\'t see you anymore!'
-        });
-      }, function errorCallback(response) {
-        console.log('err response:' + JSON.stringify(response));
-      });
-  }
-
-  $scope.close = function() {
-    $ionicHistory.goBack();
-  }
-
-  var updateConts = function(){
-    $scope.numFriends = 0;
-    $scope.numPendings = 0;
-    for (var i=0; i<$scope.allFriends.length; i++){
-      if ($scope.allFriends[i].pending){
-        $scope.numPendings++;
-      }
-      else{
-        $scope.numFriends++;
-      }
-    }
-    //console.log('$scope.numFriends:' + $scope.numFriends);
-    //console.log('$scope.numPendings:' + $scope.numPendings);
   }
 })
 

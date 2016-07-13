@@ -1,19 +1,18 @@
 <ion-view view-title="My Friends">
   <ion-nav-buttons side="secondary">
     <div class="buttons" ng-if="loggedIn">
-      <button ng-if="numFriendsWhoSeeMe && !pendingFriends" class="button icon ion-eye button-balanced" ng-click="pending()"> {{numFriendsWhoSeeMe}}</button>
-      <button ng-if="numFriendsWhoSeeMe && pendingFriends"  class="button icon ion-eye button-assertive" ng-click="pending()"> {{numFriendsWhoSeeMe}}</button>
+    <button class="button button-icon icon ion-refresh" ng-click="doRefresh()"></button>
       <button class="button button-icon icon ion-plus" ng-click="addFriend()"></button>
     </div>
   </ion-nav-buttons>
-  <ion-content>
+
 	<ion-tabs class="tabs-stable">
 
-	  <ion-tab title="32 Friends">
+	  <ion-tab title="{{myFriends.length}} Friends">
 	    <br/><br/><br/><br/><br/>
-	    <div align="center" ng-if="friends.length">Long tap on a friend to delete</div>
+	    <div align="center" ng-if="myFriends.length">Long tap on a friend to delete</div>
 	    <ion-list ng-if="loggedIn">
-	      <ion-item ng-repeat="friend in friends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
+	      <ion-item ng-repeat="friend in myFriends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
 	        <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
 	        <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
 	        <h1>{{friend.username}}</h1>
@@ -27,14 +26,13 @@
 	    </ion-list>
 	  </ion-tab>
 
-	  <ion-tab title="4 Pending">
+	  <ion-tab title="{{numPendings}} Pending">
 	  	<br/><br/><br/><br/><br/>
 	    <ion-list>
-	      <div class="item item-divider">Pending</div>
 	      <ion-item ng-if="!numPendings">
 	        <p>No pending invitations</p>
 	      </ion-item>
-	      <ion-item ng-repeat="friend in allFriends | filter : {pending : true}">
+	      <ion-item ng-repeat="friend in seeingMe | filter : {pending : true}">
 	        <div class="row">
 	          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
 	          <div class="col col-70" align="left">
@@ -52,11 +50,38 @@
 	    </ion-list>
 	  </ion-tab>
 
-	  <ion-tab title="{{numFriendsWhoSeeMe}} Seeing me">
-	  	<br/><br/><br/><br/><br/>
-	    <p>Tab 3 content</p>
-	  </ion-tab>
+		<ion-tab title="{{seeingMe.length - numPendings}} Seeing me">
+			<br/><br/><br/><br/><br/>
+			<ion-list>
+				<ion-item ng-if="!(seeingMe.length - numPendings)">
+					<p>No connected friends yet</p>
+				</ion-item>
+				<ion-item ng-if="seeingMe.length - numPendings">
+					<div align="right"><small>Full access?</small></div>
+				</ion-item>
+				<ion-item ng-repeat="friend in seeingMe | filter : {pending : false}">
+			        <div class="row">
+			          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
+			          <div class="col col-70" align="left">
+			            <h1>
+			              <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png" width="30">
+			              <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png" width="30">
+			              {{friend.username}}
+			            </h1>
+			          </div>
+			          <div class="col col-15" align="right">
+			            <label class="toggle toggle-balanced">
+			               <input type="checkbox" ng-model="friend.write" ng-change="accept(friend.id, friend.write)">
+			               <div class="track">
+			                 <div class="handle"></div>
+			               </div>
+			            </label>
+			          </div>
+			        </div>
+			      </ion-item>
+		      </ion-list>
+		</ion-tab>
 
 	</ion-tabs>
-  </ion-content>
+
 </ion-view>
