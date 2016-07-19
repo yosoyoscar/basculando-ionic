@@ -72,6 +72,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.friends', 's
       }
     })
 
+    .state('app.about', {
+      url: '/about',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/about.html',
+          controller: ''
+        }
+      }
+    })
+
     ;
 
   // if none of the above states are matched, use this as the fallback

@@ -9,74 +9,80 @@
 	<ion-tabs class="tabs-stable">
 
 	  <ion-tab title="{{myFriends.length}} Friends">
-	    <br/><br/><br/><br/><br/>
-	    <div align="center" ng-if="myFriends.length">Long tap on a friend to delete</div>
-	    <ion-list ng-if="loggedIn">
-	      <ion-item ng-repeat="friend in myFriends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
-	        <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}">
-	        <h1>{{friend.username}}</h1>
-	         <div class="row">
-	          <div class="col col-33"><i class="icon ion-speedometer"></i> {{friend.weight | number : 2}}</div>
-	          <div class="col col-33"><i class="icon ion-flag"></i> {{friend.goal | number : 2}}</div>
-	          <div class="col col-33" ng-if="friend.weight <= friend.goal"><i class="icon ion-arrow-down-c"> {{friend.goal - friend.weight | number : 2}} Kg</i></div>
-	          <div class="col col-33" ng-if="friend.weight > friend.goal"><i class="icon ion-arrow-up-c"> {{friend.weight - friend.goal | number : 2}} Kg</i></div>
-	        </div>
-	      </ion-item>
-	    </ion-list>
+	  	<ion-content>
+		    <br/><br/><br/><br/><br/>
+		    <div align="center" ng-if="myFriends.length">Long tap on a friend to delete</div>
+		    <ion-list ng-if="loggedIn">
+		      <ion-item ng-repeat="friend in myFriends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
+		        <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}">
+		        <h1>{{friend.username}}</h1>
+		         <div class="row">
+		          <div class="col col-33"><i class="icon ion-speedometer"></i> {{friend.weight | number : 2}}</div>
+		          <div class="col col-33"><i class="icon ion-flag"></i> {{friend.goal | number : 2}}</div>
+		          <div class="col col-33" ng-if="friend.weight <= friend.goal"><i class="icon ion-arrow-down-c"> {{friend.goal - friend.weight | number : 2}} Kg</i></div>
+		          <div class="col col-33" ng-if="friend.weight > friend.goal"><i class="icon ion-arrow-up-c"> {{friend.weight - friend.goal | number : 2}} Kg</i></div>
+		        </div>
+		      </ion-item>
+		    </ion-list>
+	    </ion-content>
 	  </ion-tab>
 
 	  <ion-tab title="{{numPendings}} Pending">
-	  	<br/><br/><br/><br/><br/>
-	    <ion-list>
-	      <ion-item ng-if="!numPendings">
-	        <p>No pending invitations</p>
-	      </ion-item>
-	      <ion-item ng-repeat="friend in seeingMe | filter : {pending : true}">
-	        <div class="row">
-	          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
-	          <div class="col col-70" align="left">
-	            <h1>
-	              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
-	              {{friend.username}}
-	            </h1>
-	          </div>
-	          <div class="col col-15" align="right">
-	            <button class="button button-small icon ion-checkmark-round button-balanced" ng-click="accept(friend.id, false)"></button>
-	          </div>
-	        </div>
-	      </ion-item>
-	    </ion-list>
+	  	<ion-content>
+		  	<br/><br/><br/><br/><br/>
+		    <ion-list>
+		      <ion-item ng-if="!numPendings">
+		        <p>No pending invitations</p>
+		      </ion-item>
+		      <ion-item ng-repeat="friend in seeingMe | filter : {pending : true}">
+		        <div class="row">
+		          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
+		          <div class="col col-70" align="left">
+		            <h1>
+		              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
+		              {{friend.username}}
+		            </h1>
+		          </div>
+		          <div class="col col-15" align="right">
+		            <button class="button button-small icon ion-checkmark-round button-balanced" ng-click="accept(friend.id, false)"></button>
+		          </div>
+		        </div>
+		      </ion-item>
+		    </ion-list>
+	    </ion-content>
 	  </ion-tab>
 
 		<ion-tab title="{{seeingMe.length - numPendings}} Seeing me">
-			<br/><br/><br/><br/><br/>
-			<ion-list>
-				<ion-item ng-if="!(seeingMe.length - numPendings)">
-					<p>No connected friends yet</p>
-				</ion-item>
-				<ion-item ng-if="seeingMe.length - numPendings">
-					<div align="right"><small>Full access?</small></div>
-				</ion-item>
-				<ion-item ng-repeat="friend in seeingMe | filter : {pending : false}">
-			        <div class="row">
-			          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
-			          <div class="col col-70" align="left">
-			            <h1>
-			              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
-			              {{friend.username}}
-			            </h1>
-			          </div>
-			          <div class="col col-15" align="right">
-			            <label class="toggle toggle-balanced">
-			               <input type="checkbox" ng-model="friend.write" ng-change="accept(friend.id, friend.write)">
-			               <div class="track">
-			                 <div class="handle"></div>
-			               </div>
-			            </label>
-			          </div>
-			        </div>
-			      </ion-item>
-		      </ion-list>
+			<ion-content>
+				<br/><br/><br/><br/><br/>
+				<ion-list>
+					<ion-item ng-if="!(seeingMe.length - numPendings)">
+						<p>No connected friends yet</p>
+					</ion-item>
+					<ion-item ng-if="seeingMe.length - numPendings">
+						<div align="right"><small>Full access?</small></div>
+					</ion-item>
+					<ion-item ng-repeat="friend in seeingMe | filter : {pending : false}">
+				        <div class="row">
+				          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
+				          <div class="col col-70" align="left">
+				            <h1>
+				              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
+				              {{friend.username}}
+				            </h1>
+				          </div>
+				          <div class="col col-15" align="right">
+				            <label class="toggle toggle-balanced">
+				               <input type="checkbox" ng-model="friend.write" ng-change="accept(friend.id, friend.write)">
+				               <div class="track">
+				                 <div class="handle"></div>
+				               </div>
+				            </label>
+				          </div>
+				        </div>
+				      </ion-item>
+			      </ion-list>
+		      </ion-content>
 		</ion-tab>
 
 	</ion-tabs>
