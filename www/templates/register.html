@@ -9,6 +9,11 @@
     <form name="registrationForm" ng-submit="doRegister()">
       <div class="list">
         <label class="item item-input">
+          <span class="input-label">Avatar</span>
+          <img ng-click="showAvatar()" ng-src="https://basculando.herokuapp.com/images/{{registration.avatar}}" width="40">
+          <button ng-click="showAvatar()" style="display: none;"></button>
+        </label>
+        <label class="item item-input">
           <span ng-show="registrationForm.username.$error.required"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
           <span class="input-label">Username</span>
           <input type="text" name="username" ng-model="registration.username" required>

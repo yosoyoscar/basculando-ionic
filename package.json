@@ -1,7 +1,7 @@
 {
-  "name": "wc-ionic",
+  "name": "basculando-ionic",
   "version": "1.1.1",
-  "description": "wc-ionic: An Ionic project",
+  "description": "basculando-ionic: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",

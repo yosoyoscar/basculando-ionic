@@ -13,8 +13,7 @@
     <div class="list card" ng-if="loggedIn">
 
       <div class="item item-avatar">
-        <img ng-if="user.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
-        <img ng-if="!user.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
+        <img ng-src="https://basculando.herokuapp.com/images/{{user.avatar}}">
         <h2>{{user.username}}</h2>
         <p>IMC {{user.imc | number : 2}}
            <span ng-if="!user.percentil" class="badge badge-assertive">{{user.imcdescription}}</span>

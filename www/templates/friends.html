@@ -13,8 +13,7 @@
 	    <div align="center" ng-if="myFriends.length">Long tap on a friend to delete</div>
 	    <ion-list ng-if="loggedIn">
 	      <ion-item ng-repeat="friend in myFriends | orderBy: 'username'" href="#/app/user/{{friend.id}}" class="item-thumbnail-left" on-hold="deleteFriend(friend.id, friend.username)">
-	        <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png">
-	        <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png">
+	        <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}">
 	        <h1>{{friend.username}}</h1>
 	         <div class="row">
 	          <div class="col col-33"><i class="icon ion-speedometer"></i> {{friend.weight | number : 2}}</div>
@@ -37,8 +36,7 @@
 	          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
 	          <div class="col col-70" align="left">
 	            <h1>
-	              <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png" width="30">
-	              <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png" width="30">
+	              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
 	              {{friend.username}}
 	            </h1>
 	          </div>
@@ -64,8 +62,7 @@
 			          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
 			          <div class="col col-70" align="left">
 			            <h1>
-			              <img ng-if="friend.male" ng-src="https://basculando.herokuapp.com/images/boy.png" width="30">
-			              <img ng-if="!friend.male" ng-src="https://basculando.herokuapp.com/images/girl.png" width="30">
+			              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
 			              {{friend.username}}
 			            </h1>
 			          </div>

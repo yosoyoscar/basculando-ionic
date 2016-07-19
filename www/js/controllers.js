@@ -11,7 +11,7 @@ angular.module('starter.controllers', [])
 
   // Form data for the login modal
   $scope.loginData = $localStorage.getObject('userinfo','{}');
-  $scope.registration = {username: '', password: '', male: true};
+  $scope.registration = {username: '', password: '', male: true, avatar: 'avatar01.png'};
   $scope.newPass = {pass: '', confirm: ''};
   $scope.reset = {username: ''};
   $scope.loggedIn = false;
@@ -165,6 +165,29 @@ angular.module('starter.controllers', [])
         template: message
       });
   });
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/avatar.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.avatar = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeAvatar = function() {
+    $scope.avatar.hide();
+  };
+
+  // Open the login modal
+  $scope.showAvatar = function() {
+    $scope.avatar.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.selectAvatar = function(avatar) {
+    $scope.registration.avatar = avatar;
+    $scope.closeAvatar();
+  };
 })
 
 .controller('UserCtrl', function($scope, $rootScope, $http, $stateParams, $ionicModal, $localStorage, $location, baseURL, AuthService) {
@@ -352,6 +375,7 @@ angular.module('starter.controllers', [])
     var req = { method: 'PUT', url: baseURL + '/users/' +  $stateParams.userId,
                 data: {
                   male: $scope.user.male,
+                  avatar: $scope.user.avatar,
                   height: $scope.user.height,
                   birthdate: $scope.user.birthdate,
                   goal: $scope.user.goal,
@@ -364,6 +388,29 @@ angular.module('starter.controllers', [])
       }, function errorCallback(response) {
         console.log('err response:' + JSON.stringify(response));
       });
+  };
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/avatar.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeAvatar = function() {
+    $scope.modal.hide();
+  };
+
+  // Open the login modal
+  $scope.showAvatar = function() {
+    $scope.modal.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.selectAvatar = function(avatar) {
+    $scope.user.avatar = avatar;
+    $scope.closeAvatar();
   };
 
   loadUserData();
