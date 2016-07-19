@@ -15,7 +15,7 @@
       <div class="item item-avatar">
         <img ng-src="https://basculando.herokuapp.com/images/{{user.avatar}}">
         <h2>{{user.username}}</h2>
-        <p>IMC {{user.imc | number : 2}}
+        <p>BMI {{user.imc | number : 2}}
            <span ng-if="!user.percentil" class="badge badge-assertive">{{user.imcdescription}}</span>
            <span ng-if="user.percentil" class="badge badge-assertive">P {{user.percentil}}</span>
         </p>
