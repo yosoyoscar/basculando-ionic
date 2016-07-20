@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-  .module('starter.services',[])
+  .module('basculando.services',[])
   .constant('baseURL', 'https://basculando.herokuapp.com')
   //.constant('baseURL', 'http://localhost:5000')
 

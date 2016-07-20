@@ -2,7 +2,7 @@
 <widget id="com.ionicframework.wcionic603110" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Basculando</name>
   <description>&#xD;
-        An Ionic Framework and Cordova project.&#xD;
+        Keep your weights and your friend's in one place.&#xD;
     </description>
   <author email="carmaco.labs@gmail.com" href="http://basculando.herokuapp.com/">&#xD;
       Carmaco Labs&#xD;

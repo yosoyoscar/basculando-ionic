@@ -1,7 +1,7 @@
 {
-  "name": "basculando-ionic",
+  "name": "Basculando",
   "version": "1.1.1",
-  "description": "basculando-ionic: An Ionic project",
+  "description": "Basculando: Keep your weights and your friend's in one place.",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",

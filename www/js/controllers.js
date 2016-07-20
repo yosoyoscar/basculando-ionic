@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('basculando.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $localStorage, $ionicPopup, AuthService, baseURL, $rootScope, $location) {
 
@@ -85,7 +85,7 @@ angular.module('starter.controllers', [])
 
   // Perform the login action when the user submits the login form
   $scope.doRegister = function () {
-      console.log('Doing registration', $scope.registration);
+      //console.log('Doing registration', $scope.registration);
       if ($scope.registration.password === $scope.registration.password2){
         $scope.loginData.username = $scope.registration.username;
         $scope.loginData.password = $scope.registration.password;

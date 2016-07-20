@@ -1,4 +1,4 @@
-angular.module('starter.friends', [])
+angular.module('basculando.friends', [])
 
 .controller('FriendsCtrl', function($scope, $http, $localStorage, baseURL, AuthService, $rootScope, $location, $ionicPopup) {
   $scope.myFriends   = [];
@@ -11,6 +11,11 @@ angular.module('starter.friends', [])
       $http(req).then(
         function successCallback(response) {
           $scope.myFriends = response.data;
+          for (var i = 0; i < $scope.myFriends.length; i++) {
+            $scope.myFriends[i].weight = Number($scope.myFriends[i].weight);
+            $scope.myFriends[i].goal = Number($scope.myFriends[i].goal);
+          }
+          console.log($scope.myFriends);
           req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/whoisconnectedtome' }
           $http(req).then(
             function successCallback(response) {
