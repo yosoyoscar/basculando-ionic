@@ -1,6 +1,6 @@
 {
   "name": "Basculando",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Basculando: Keep your weights and your friend's in one place.",
   "dependencies": {
     "gulp": "^3.5.6",
