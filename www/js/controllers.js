@@ -1,6 +1,7 @@
 angular.module('basculando.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $localStorage, $ionicPopup, AuthService, baseURL, $rootScope, $location) {
+.controller('AppCtrl', ['$scope', '$ionicModal', '$timeout', '$http', '$localStorage', '$ionicPopup', 'AuthService', 'baseURL', '$rootScope', '$location', 'Charts',
+  function($scope, $ionicModal, $timeout, $http, $localStorage, $ionicPopup, AuthService, baseURL, $rootScope, $location, Charts) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -188,9 +189,16 @@ angular.module('basculando.controllers', [])
     $scope.registration.avatar = avatar;
     $scope.closeAvatar();
   };
-})
 
-.controller('UserCtrl', function($scope, $rootScope, $http, $stateParams, $ionicModal, $localStorage, $location, baseURL, AuthService) {
+  // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart','gauge']});
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(Charts.drawChart);
+
+}])
+
+.controller('UserCtrl', ['$scope', '$rootScope', '$http', '$stateParams', '$ionicModal', '$localStorage', '$location', 'baseURL', 'AuthService', 'Charts',
+  function($scope, $rootScope, $http, $stateParams, $ionicModal, $localStorage, $location, baseURL, AuthService, Charts) {
   if ($scope.loginData && $scope.loginData.username && $scope.loginData.password){
     $scope.spinner = true;
   }
@@ -222,10 +230,10 @@ angular.module('basculando.controllers', [])
   });
 
   var loadProfile = function (){
-    //console.log('$stateParams.userId:' + $stateParams.userId);
     if (!$stateParams.userId || $stateParams.userId == 0){
       $stateParams.userId = AuthService.getUserId();
     }
+    //console.log('$stateParams.userId:' + $stateParams.userId);
     var req = { method: 'GET', url: baseURL + '/users/' +  $stateParams.userId + '/profile'
                 //,headers: { 'x-access-token': AuthService.getTokenId() }
     }
@@ -233,6 +241,9 @@ angular.module('basculando.controllers', [])
       function successCallback(response) {
         $scope.spinner = false;
         $scope.user = response.data;
+        if($scope.weights != null && $scope.user != null){
+          Charts.drawChart($scope.weights, $scope.user.imc);
+        }
       }, function errorCallback(response) {
         console.log('err response:' + JSON.stringify(response));
       });
@@ -252,6 +263,9 @@ angular.module('basculando.controllers', [])
           response.data[i].date = new Date(response.data[i].date);
         }
         $scope.weights = response.data;
+        if($scope.weights != null && $scope.user != null){
+          Charts.drawChart($scope.weights, $scope.user.imc);
+        }
       }, function errorCallback(response) {
         console.log('err response:' + JSON.stringify(response));
       });
@@ -350,14 +364,25 @@ angular.module('basculando.controllers', [])
     $location.path('/app/profile/' + id);
   }
 
+  $scope.showChart = function(id) {
+    $location.path('/app/chart/' + id);
+  }
+
+  $scope.doRefresh = function() {
+    if(AuthService.isAuthenticated()){
+      loadProfile();
+      loadWeights();
+    }
+  }
+
   if(AuthService.isAuthenticated()){
     loadProfile();
     loadWeights();
   }
+}])
 
-})
-
-.controller('EditProfileCtrl', function($scope, $ionicModal, $http, $stateParams, baseURL, AuthService, $rootScope, $ionicHistory) {
+.controller('EditProfileCtrl', ['$scope', '$ionicModal', '$http', '$stateParams', 'baseURL', 'AuthService', '$rootScope', '$ionicHistory',
+  function($scope, $ionicModal, $http, $stateParams, baseURL, AuthService, $rootScope, $ionicHistory) {
   $scope.user = [];
 
   var loadUserData = function (){
@@ -414,9 +439,10 @@ angular.module('basculando.controllers', [])
   };
 
   loadUserData();
-})
+}])
 
-.controller('AddFriendCtrl',function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {
+.controller('AddFriendCtrl', ['$scope', '$http', '$ionicHistory', 'baseURL', 'AuthService', '$ionicPopup',
+  function($scope, $http, $ionicHistory, baseURL, AuthService, $ionicPopup) {
   $scope.search = {searchText : ''};
   $scope.searchResult = [];
 
@@ -464,6 +490,6 @@ angular.module('basculando.controllers', [])
   $scope.close = function() {
     $ionicHistory.goBack();
   }
-})
+}])
 
 ;

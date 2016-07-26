@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form name="weightForm" ng-submit="updateWeight()">
+    <form name="weightForm">
       <div class="list">
         <label class="item item-input">
           <span ng-show="weightForm.weight.$error.required || weightForm.weight.$error.number || weightForm.weight.$error.min || weightForm.heiweightght.$error.max"><i class="icon ion-alert-circled assertive"></i>&nbsp;</span>
@@ -27,6 +27,7 @@
           <span class="input-label">Comments</span>
           <textarea ng-model="weight.comments"></textarea>
         </label>
+
         <label class="item item-input">
         Reference&nbsp;&nbsp;<label class="toggle">
           <input type="checkbox" ng-model="weight.reference">
@@ -35,8 +36,12 @@
           </div>
         </label>
         </label>
+
+        <label class="item item-input item-stacked-label" ng-show="weight.reference">
+          <textarea ng-model="helpText"></textarea>
+        </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Update</button>
+          <button class="button button-block button-positive" ng-click="updateWeight()">Update</button>
         </label>
       </div>
     </form>

@@ -4,7 +4,7 @@
 // 'basculando' is the name of this angular module (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'basculando.controllers' is found in controllers.js
-angular.module('basculando', ['ionic', 'basculando.controllers', 'basculando.friends', 'basculando.services'])
+angular.module('basculando', ['ionic', 'basculando.controllers', 'basculando.friends', 'basculando.services', 'basculando.charts'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -58,6 +58,16 @@ angular.module('basculando', ['ionic', 'basculando.controllers', 'basculando.fri
         'menuContent': {
           templateUrl: 'templates/editProfile.html',
           controller: 'EditProfileCtrl'
+        }
+      }
+    })
+
+    .state('app.chart', {
+      url: '/chart/:userId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/chart.html',
+          controller: 'UserCtrl'
         }
       }
     })

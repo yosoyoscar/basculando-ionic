@@ -1,8 +1,8 @@
 <ion-view view-title="My Friends">
   <ion-nav-buttons side="secondary">
     <div class="buttons" ng-if="loggedIn">
-    <button class="button button-icon icon ion-refresh" ng-click="doRefresh()"></button>
-      <button class="button button-icon icon ion-plus" ng-click="addFriend()"></button>
+    	<button class="button button-icon icon ion-refresh" ng-click="doRefresh()"></button>
+		<button class="button button-icon icon ion-plus" ng-click="addFriend()"></button>
     </div>
   </ion-nav-buttons>
 
@@ -38,10 +38,10 @@
 		        <div class="row">
 		          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
 		          <div class="col col-70" align="left">
-		            <h1>
+		            <h2>
 		              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
 		              {{friend.username}}
-		            </h1>
+		            </h2>
 		          </div>
 		          <div class="col col-15" align="right">
 		            <button class="button button-small icon ion-checkmark-round button-balanced" ng-click="accept(friend.id, false)"></button>
@@ -62,14 +62,14 @@
 					<ion-item ng-if="seeingMe.length - numPendings">
 						<div align="right"><small>Full access?</small></div>
 					</ion-item>
-					<ion-item ng-repeat="friend in seeingMe | filter : {pending : false}">
+					<ion-item ng-repeat="friend in seeingMe | filter : {pending : false} | orderBy: 'username'">
 				        <div class="row">
 				          <div class="col col-15" align="left"><button class="button button-small icon ion-close-round button-assertive" ng-click="deny(friend.id, friend.username)"></button></div>
 				          <div class="col col-70" align="left">
-				            <h1>
+				            <h2>
 				              <img ng-src="https://basculando.herokuapp.com/images/{{friend.avatar}}" width="30">
 				              {{friend.username}}
-				            </h1>
+				            </h2>
 				          </div>
 				          <div class="col col-15" align="right">
 				            <label class="toggle toggle-balanced">

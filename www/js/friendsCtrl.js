@@ -1,6 +1,7 @@
 angular.module('basculando.friends', [])
 
-.controller('FriendsCtrl', function($scope, $http, $localStorage, baseURL, AuthService, $rootScope, $location, $ionicPopup) {
+.controller('FriendsCtrl', ['$scope', '$http', '$localStorage', 'baseURL', 'AuthService', '$rootScope', '$location', '$ionicPopup',
+  function($scope, $http, $localStorage, baseURL, AuthService, $rootScope, $location, $ionicPopup) {
   $scope.myFriends   = [];
   $scope.seeingMe    = [];
   $scope.numPendings = 0;
@@ -15,7 +16,7 @@ angular.module('basculando.friends', [])
             $scope.myFriends[i].weight = Number($scope.myFriends[i].weight);
             $scope.myFriends[i].goal = Number($scope.myFriends[i].goal);
           }
-          console.log($scope.myFriends);
+          //console.log($scope.myFriends);
           req = { method: 'GET', url: baseURL + '/users/' +  AuthService.getUserId() + '/whoisconnectedtome' }
           $http(req).then(
             function successCallback(response) {
@@ -113,6 +114,6 @@ angular.module('basculando.friends', [])
       }
     }
   }
-})
+}])
 
 ;
